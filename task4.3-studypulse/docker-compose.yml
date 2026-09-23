@@ -1,0 +1,78 @@
+# SWE40006 Task 4.3: StudyPulse stack
+#
+#   docker compose up -d --build             web + redis over HTTP (HOST_PORT)
+#   docker compose --profile https up -d     also starts caddy for HTTPS
+#
+# frontend network: caddy and web, the only one with published ports
+# backend network: web and redis only, internal so redis can't be reached from outside
+
+name: studypulse
+
+services:
+  web:
+    image: ${DOCKERHUB_USER:-local}/studypulse:${APP_VERSION:-1.0.0}
+    build:
+      context: .
+      args:
+        APP_VERSION: ${APP_VERSION:-1.0.0}
+    container_name: studypulse-web
+    environment:
+      APP_TITLE: ${APP_TITLE:-StudyPulse}
+      APP_ENV: ${APP_ENV:-production}
+      APP_VERSION: ${APP_VERSION:-1.0.0}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+    ports:
+      - "${HOST_PORT:-8000}:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: studypulse-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: studypulse-caddy
+    profiles: ["https"]
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}   # set in .env, e.g. 13-54-120-7.sslip.io
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - web
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  redis-data:
+  caddy-data:
+  caddy-config:

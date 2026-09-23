@@ -1,0 +1,15 @@
+# secrets / local config
+.env
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# generated output
+task4.4-csv-profiler/data/output/*
+!task4.4-csv-profiler/data/output/.gitkeep
+task4.4-csv-profiler/data/input/unit_results.csv

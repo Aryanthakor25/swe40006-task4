@@ -1,0 +1,7 @@
+# LF endings for anything that runs on Linux (containers, EC2)
+*.sh          text eol=lf
+Dockerfile    text eol=lf
+Caddyfile     text eol=lf
+*.yml         text eol=lf
+*.py          text eol=lf
+*.ps1         text eol=crlf

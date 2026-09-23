@@ -1,0 +1,43 @@
+# runs the tests, lints the Dockerfiles and builds every image on each push
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: StudyPulse tests (4.3)
+        working-directory: task4.3-studypulse
+        run: |
+          pip install -r requirements-dev.txt
+          pytest -q
+      - name: csvprofiler tests (4.4)
+        working-directory: task4.4-csv-profiler
+        run: |
+          pip install pytest
+          pytest -q
+
+  lint-and-build:
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      matrix:
+        app: [task4.2-flask-app, task4.3-studypulse, task4.4-csv-profiler]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Lint Dockerfile (hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.app }}/Dockerfile
+          failure-threshold: error
+      - name: Build image
+        run: docker build -t ci/${{ matrix.app }}:${{ github.sha }} ${{ matrix.app }}
+      - name: Show image size
+        run: docker image ls ci/${{ matrix.app }}

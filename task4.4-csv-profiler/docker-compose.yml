@@ -1,0 +1,44 @@
+# SWE40006 Task 4.4: csvprofiler
+#
+# first time only:
+#   docker volume create csvprofiler-history
+#
+# batch runs (container exits when it's done):
+#   docker compose run --rm profiler profile-all
+#   docker compose run --rm profiler history
+#
+# watcher (picks up new CSVs dropped into ./data/input):
+#   docker compose up -d watcher
+#   docker compose logs -f watcher
+#   docker compose stop watcher     # sends SIGTERM, clean shutdown shows in the logs
+
+name: csvprofiler
+
+x-profiler: &profiler
+  image: ${DOCKERHUB_USER:-local}/csvprofiler:${APP_VERSION:-1.0.0}
+  build: .
+  volumes:
+    - ./data/input:/data/input:ro              # bind mount, read-only
+    - ./data/output:/data/output               # bind mount, reports come back here
+    - profiler-history:/var/lib/csvprofiler    # named volume for the history db
+  network_mode: "none"                         # doesn't need the network
+
+services:
+  profiler:
+    <<: *profiler
+    container_name: csvprofiler-batch
+    command: ["profile-all"]
+
+  watcher:
+    <<: *profiler
+    container_name: csvprofiler-watcher
+    command: ["watch", "--interval", "5"]
+    stop_grace_period: 10s
+    restart: unless-stopped
+
+volumes:
+  profiler-history:
+    # created with `docker volume create` and shared with the plain docker run
+    # commands, so compose treats it as external
+    external: true
+    name: csvprofiler-history

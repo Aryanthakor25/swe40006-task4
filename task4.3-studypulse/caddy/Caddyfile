@@ -1,0 +1,6 @@
+# Caddy gets a Let's Encrypt certificate for {$DOMAIN}, renews it, and redirects
+# HTTP to HTTPS. Requests go to the web container on the frontend network.
+{$DOMAIN} {
+	encode gzip
+	reverse_proxy web:8000
+}

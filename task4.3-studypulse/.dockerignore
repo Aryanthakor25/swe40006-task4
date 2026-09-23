@@ -1,0 +1,18 @@
+# keep the build context small and keep .env / tests out of the image
+.git/
+.github/
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+tests/
+caddy/
+.env
+.env.*
+!.env.example
+docker-compose*.yml
+compose*.yml
+requirements-dev.txt
+*.md
