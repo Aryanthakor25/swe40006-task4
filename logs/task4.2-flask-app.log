@@ -1,0 +1,446 @@
+﻿==================================================================
+ SWE40006 Deployment Task 4: task4.2-flask-app
+ Student : Aryan Thakor (105061154)
+ Host    : DESKTOP-5KRJ5RA
+ Date    : 2026-09-23 21:39:02 +10:00
+==================================================================
+
+---- Build the image from the custom Dockerfile ----
+
+PS> docker build --progress=plain -t aryan2556/swe40006-flask-app:1.0 -t aryan2556/swe40006-flask-app:latest "C:\Users\ARYAN\Documents\swe40006-task4\task4.2-flask-app"
+#0 building with "desktop-linux" instance using docker driver
+System.Management.Automation.RemoteException
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 596B 0.0s done
+#1 DONE 0.1s
+System.Management.Automation.RemoteException
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 ...
+System.Management.Automation.RemoteException
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+System.Management.Automation.RemoteException
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 3.6s
+System.Management.Automation.RemoteException
+#4 [internal] load .dockerignore
+#4 transferring context: 83B 0.0s done
+#4 DONE 0.1s
+System.Management.Automation.RemoteException
+#5 [1/5] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#5 resolve docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9 0.1s done
+#5 ...
+System.Management.Automation.RemoteException
+#6 [internal] load build context
+#6 transferring context: 2.08kB 0.0s done
+#6 DONE 0.1s
+System.Management.Automation.RemoteException
+#5 [1/5] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#5 DONE 0.3s
+System.Management.Automation.RemoteException
+#5 [1/5] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#5 sha256:06ad939ed42b51caafb25b14810875d14e0ee0c441d3e2e5e46475fb8c150bca 0B / 249B 0.2s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 0B / 12.12MB 0.2s
+#5 sha256:3764a9a7d1e8a98213ab2201a41dbf3da9c60240ea35a5ea96ab994555070a70 0B / 1.29MB 0.2s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 0B / 29.83MB 0.2s
+#5 sha256:06ad939ed42b51caafb25b14810875d14e0ee0c441d3e2e5e46475fb8c150bca 249B / 249B 0.4s done
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 1.05MB / 12.12MB 0.9s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 3.15MB / 12.12MB 1.1s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 4.19MB / 12.12MB 1.4s
+#5 sha256:3764a9a7d1e8a98213ab2201a41dbf3da9c60240ea35a5ea96ab994555070a70 1.29MB / 1.29MB 1.5s done
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 5.24MB / 12.12MB 1.7s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 6.29MB / 12.12MB 1.8s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 2.10MB / 29.83MB 1.7s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 7.34MB / 12.12MB 2.0s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 8.39MB / 12.12MB 2.1s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 4.19MB / 29.83MB 2.0s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 9.44MB / 12.12MB 2.3s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 10.49MB / 12.12MB 2.4s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 6.29MB / 29.83MB 2.3s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 12.12MB / 12.12MB 2.6s
+#5 sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 12.12MB / 12.12MB 2.6s done
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 8.39MB / 29.83MB 2.6s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 11.53MB / 29.83MB 2.9s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 14.68MB / 29.83MB 3.2s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 16.78MB / 29.83MB 3.3s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 18.87MB / 29.83MB 3.5s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 20.97MB / 29.83MB 3.6s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 24.12MB / 29.83MB 3.9s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 27.26MB / 29.83MB 4.2s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 29.36MB / 29.83MB 4.4s
+#5 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 29.83MB / 29.83MB 4.4s done
+#5 extracting sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8
+#5 extracting sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 3.2s done
+#5 DONE 8.0s
+System.Management.Automation.RemoteException
+#5 [1/5] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#5 extracting sha256:3764a9a7d1e8a98213ab2201a41dbf3da9c60240ea35a5ea96ab994555070a70
+#5 extracting sha256:3764a9a7d1e8a98213ab2201a41dbf3da9c60240ea35a5ea96ab994555070a70 0.4s done
+#5 extracting sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0
+#5 extracting sha256:b0dc7f87bef15c2536cb182d6c48b52f90a0522884ec9eb222f833fa97ffebf0 1.7s done
+#5 DONE 10.1s
+System.Management.Automation.RemoteException
+#5 [1/5] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#5 extracting sha256:06ad939ed42b51caafb25b14810875d14e0ee0c441d3e2e5e46475fb8c150bca 0.1s done
+#5 DONE 10.2s
+System.Management.Automation.RemoteException
+#7 [2/5] WORKDIR /app
+#7 DONE 0.6s
+System.Management.Automation.RemoteException
+#8 [3/5] COPY requirements.txt .
+#8 DONE 0.1s
+System.Management.Automation.RemoteException
+#9 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 3.478 Collecting flask==3.1.3 (from -r requirements.txt (line 1))
+#9 3.630   Downloading flask-3.1.3-py3-none-any.whl.metadata (3.2 kB)
+#9 3.657 Collecting blinker>=1.9.0 (from flask==3.1.3->-r requirements.txt (line 1))
+#9 3.671   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#9 3.717 Collecting click>=8.1.3 (from flask==3.1.3->-r requirements.txt (line 1))
+#9 3.731   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#9 3.757 Collecting itsdangerous>=2.2.0 (from flask==3.1.3->-r requirements.txt (line 1))
+#9 3.770   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#9 3.804 Collecting jinja2>=3.1.2 (from flask==3.1.3->-r requirements.txt (line 1))
+#9 3.819   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#9 3.933 Collecting markupsafe>=2.1.1 (from flask==3.1.3->-r requirements.txt (line 1))
+#9 3.947   Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#9 3.999 Collecting werkzeug>=3.1.0 (from flask==3.1.3->-r requirements.txt (line 1))
+#9 4.015   Downloading werkzeug-3.1.8-py3-none-any.whl.metadata (4.0 kB)
+#9 4.047 Downloading flask-3.1.3-py3-none-any.whl (103 kB)
+#9 4.080 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#9 4.094 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#9 4.118 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#9 4.131 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#9 4.161 Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#9 4.175 Downloading werkzeug-3.1.8-py3-none-any.whl (226 kB)
+#9 4.239 Installing collected packages: markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, flask
+#9 5.179 Successfully installed blinker-1.9.0 click-8.5.0 flask-3.1.3 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.3 werkzeug-3.1.8
+#9 5.180 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 5.344 
+#9 5.344 [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+#9 5.344 [notice] To update, run: pip install --upgrade pip
+#9 DONE 5.6s
+System.Management.Automation.RemoteException
+#10 [5/5] COPY app.py .
+#10 DONE 0.1s
+System.Management.Automation.RemoteException
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 0.8s done
+#11 exporting manifest sha256:500c53ae114f74e440ca5f82e97720c02305744d27968cb9cc1766514749ef55 0.0s done
+#11 exporting config sha256:2709d09f7351b65941797cd216ee5b1b28417de3f762006f1918502f61bf3883 0.0s done
+#11 exporting attestation manifest sha256:d59f8ab6d4298360216eebec0cf2989421912b304934318010faafce94f22678
+#11 exporting attestation manifest sha256:d59f8ab6d4298360216eebec0cf2989421912b304934318010faafce94f22678 0.1s done
+#11 exporting manifest list sha256:0dbfae57f7e5ca9e3c5b0b75c1290ad3faca0d176d29c65f7a1d18c195277f5a 0.0s done
+#11 naming to docker.io/aryan2556/swe40006-flask-app:1.0
+#11 naming to docker.io/aryan2556/swe40006-flask-app:1.0 done
+#11 unpacking to docker.io/aryan2556/swe40006-flask-app:1.0
+#11 unpacking to docker.io/aryan2556/swe40006-flask-app:1.0 0.5s done
+#11 naming to docker.io/aryan2556/swe40006-flask-app:latest done
+#11 unpacking to docker.io/aryan2556/swe40006-flask-app:latest 0.0s done
+#11 DONE 1.7s
+System.Management.Automation.RemoteException
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/4friaxy9hz5f8lq8adb8i9qlq
+
+PS> docker image ls aryan2556/swe40006-flask-app
+IMAGE                                 ID             DISK USAGE   CONTENT SIZE   EXTRA
+aryan2556/swe40006-flask-app:1.0      0dbfae57f7e5        185MB         44.9MB        
+aryan2556/swe40006-flask-app:latest   0dbfae57f7e5        185MB         44.9MB        
+
+---- Run locally: host port 8080 to container port 5000 ----
+
+PS> docker rm -f flask-app-4-2
+
+PS> docker run -d --name flask-app-4-2 -p 8080:5000 aryan2556/swe40006-flask-app:1.0
+82e1cd3bf071c91bcc1b2bb45352171ee74d224c3187a30af873b76f0cdc93db
+
+PS> docker ps --filter "name=flask-app-4-2" --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+CONTAINER ID   IMAGE                              STATUS         PORTS
+82e1cd3bf071   aryan2556/swe40006-flask-app:1.0   Up 3 seconds   0.0.0.0:8080->5000/tcp, [::]:8080->5000/tcp
+
+PS> docker port flask-app-4-2
+5000/tcp -> 0.0.0.0:8080
+5000/tcp -> [::]:8080
+
+PS> Invoke-RestMethod http://localhost:8080/api/info | ConvertTo-Json
+{
+    "app":  "swe40006-flask-app",
+    "hostname":  "82e1cd3bf071",
+    "port":  5000,
+    "python":  "3.12.14",
+    "server_time":  "2026-09-23T11:39:44+00:00",
+    "started_at":  "2026-09-23T11:39:41+00:00",
+    "version":  "1.0.0"
+}
+
+PS> (Invoke-WebRequest http://localhost:8080/ -UseBasicParsing).StatusCode
+200
+
+PS> docker logs flask-app-4-2
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.17.0.2:5000
+[33mPress CTRL+C to quit[0m
+172.17.0.1 - - [23/Sep/2026 11:39:44] "GET /api/info HTTP/1.1" 200 -
+172.17.0.1 - - [23/Sep/2026 11:39:44] "GET / HTTP/1.1" 200 -
+
+---- Push to Docker Hub ----
+
+PS> docker push aryan2556/swe40006-flask-app:1.0
+The push refers to repository [docker.io/aryan2556/swe40006-flask-app]
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+3764a9a7d1e8: Waiting
+3764a9a7d1e8: Waiting
+3764a9a7d1e8: Waiting
+3764a9a7d1e8: Waiting
+d731d9ef387b: Waiting
+e522574837b2: Pushed
+44136fa355b3: Pushed
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+06ad939ed42b: Waiting
+d731d9ef387b: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+d731d9ef387b: Waiting
+b0dc7f87bef1: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+d731d9ef387b: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+d731d9ef387b: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+d731d9ef387b: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+d731d9ef387b: Waiting
+d731d9ef387b: Pushed
+ab32d900b048: Waiting
+7a53ff444b37: Waiting
+06ad939ed42b: Pushed
+7a53ff444b37: Waiting
+ab32d900b048: Waiting
+ab32d900b048: Waiting
+7a53ff444b37: Waiting
+ab32d900b048: Waiting
+7a53ff444b37: Waiting
+ab32d900b048: Waiting
+7a53ff444b37: Waiting
+ab32d900b048: Waiting
+7a53ff444b37: Waiting
+7a53ff444b37: Waiting
+ab32d900b048: Pushed
+bbf8489233c8: Waiting
+bbf8489233c8: Waiting
+bbf8489233c8: Waiting
+bbf8489233c8: Waiting
+bbf8489233c8: Waiting
+bbf8489233c8: Waiting
+3764a9a7d1e8: Pushed
+bbf8489233c8: Pushed
+7a53ff444b37: Pushed
+b0dc7f87bef1: Pushed
+6b37362b3da7: Pushed
+1.0: digest: sha256:0dbfae57f7e5ca9e3c5b0b75c1290ad3faca0d176d29c65f7a1d18c195277f5a size: 856
+
+PS> docker push aryan2556/swe40006-flask-app:latest
+The push refers to repository [docker.io/aryan2556/swe40006-flask-app]
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+e522574837b2: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+e522574837b2: Waiting
+44136fa355b3: Already exists
+3764a9a7d1e8: Layer already exists
+6b37362b3da7: Waiting
+6b37362b3da7: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+e522574837b2: Waiting
+6b37362b3da7: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+e522574837b2: Waiting
+e522574837b2: Waiting
+d731d9ef387b: Waiting
+ab32d900b048: Waiting
+6b37362b3da7: Layer already exists
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+d731d9ef387b: Waiting
+ab32d900b048: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+e522574837b2: Waiting
+d731d9ef387b: Waiting
+ab32d900b048: Waiting
+b0dc7f87bef1: Waiting
+06ad939ed42b: Waiting
+e522574837b2: Waiting
+b0dc7f87bef1: Layer already exists
+06ad939ed42b: Layer already exists
+bbf8489233c8: Waiting
+e522574837b2: Already exists
+d731d9ef387b: Layer already exists
+ab32d900b048: Layer already exists
+7a53ff444b37: Waiting
+bbf8489233c8: Waiting
+7a53ff444b37: Waiting
+7a53ff444b37: Waiting
+bbf8489233c8: Waiting
+7a53ff444b37: Layer already exists
+bbf8489233c8: Layer already exists
+latest: digest: sha256:0dbfae57f7e5ca9e3c5b0b75c1290ad3faca0d176d29c65f7a1d18c195277f5a size: 856

@@ -1,0 +1,598 @@
+﻿==================================================================
+ SWE40006 Deployment Task 4: task4.3-studypulse
+ Student : Aryan Thakor (105061154)
+ Host    : DESKTOP-5KRJ5RA
+ Date    : 2026-09-23 22:28:58 +10:00
+==================================================================
+
+---- Environment configuration (.env) ----
+
+PS> Get-Content .env | Select-String -Pattern "^[A-Z]"
+DOCKERHUB_USER=aryan2556
+APP_VERSION=1.0.0
+APP_TITLE=StudyPulse
+APP_ENV=production
+LOG_LEVEL=info
+REDIS_HOST=redis
+REDIS_PORT=6379
+HOST_PORT=8000
+DOMAIN=
+
+PS> docker compose config --services
+redis
+web
+
+---- Build the image (multi-stage, non-root, healthcheck) ----
+
+PS> docker compose build --progress=plain web
+--progress is a global compose flag, better use `docker compose --progress xx build ...
+ Image aryan2556/studypulse:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 641B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 30B 0.0s
+#2 transferring dockerfile: 1.96kB 0.1s done
+#2 DONE 0.2s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 2.2s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 289B 0.0s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 11.38kB 0.1s done
+#6 DONE 0.2s
+
+#7 [builder 1/4] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#7 resolve docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9 0.1s done
+#7 CACHED
+
+#8 [runtime 2/5] RUN groupadd --system --gid 10001 app  && useradd --system --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app
+#8 1.599 useradd warning: app's uid 10001 is greater than SYS_UID_MAX 999
+#8 DONE 1.7s
+
+#9 [runtime 3/5] WORKDIR /srv
+#9 DONE 0.1s
+
+#10 [builder 2/4] RUN python -m venv /opt/venv
+#10 DONE 9.9s
+
+#11 [builder 3/4] COPY requirements.txt /tmp/requirements.txt
+#11 DONE 0.2s
+
+#12 [builder 4/4] RUN pip install -r /tmp/requirements.txt
+#12 1.668 Collecting fastapi==0.141.1 (from -r /tmp/requirements.txt (line 1))
+#12 1.831   Downloading fastapi-0.141.1-py3-none-any.whl.metadata (27 kB)
+#12 1.935 Collecting uvicorn==0.53.0 (from -r /tmp/requirements.txt (line 2))
+#12 1.950   Downloading uvicorn-0.53.0-py3-none-any.whl.metadata (6.6 kB)
+#12 2.031 Collecting redis==8.1.0 (from -r /tmp/requirements.txt (line 3))
+#12 2.046   Downloading redis-8.1.0-py3-none-any.whl.metadata (16 kB)
+#12 2.158 Collecting starlette>=0.46.0 (from fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 2.173   Downloading starlette-1.7.0-py3-none-any.whl.metadata (6.6 kB)
+#12 2.452 Collecting pydantic>=2.9.0 (from fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 2.469   Downloading pydantic-2.13.5-py3-none-any.whl.metadata (110 kB)
+#12 2.550 Collecting typing-extensions>=4.8.0 (from fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 2.563   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#12 2.586 Collecting typing-inspection>=0.4.2 (from fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 2.598   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+#12 2.620 Collecting annotated-doc>=0.0.2 (from fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 2.636   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#12 2.685 Collecting click>=7.0 (from uvicorn==0.53.0->-r /tmp/requirements.txt (line 2))
+#12 2.699   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#12 2.725 Collecting h11>=0.8 (from uvicorn==0.53.0->-r /tmp/requirements.txt (line 2))
+#12 2.739   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#12 2.768 Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 2.783   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#12 4.562 Collecting pydantic-core==2.46.5 (from pydantic>=2.9.0->fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 4.579   Downloading pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+#12 4.644 Collecting anyio<5,>=4.0.0 (from starlette>=0.46.0->fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 4.661   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+#12 4.726 Collecting idna>=2.8 (from anyio<5,>=4.0.0->starlette>=0.46.0->fastapi==0.141.1->-r /tmp/requirements.txt (line 1))
+#12 4.747   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#12 4.790 Downloading fastapi-0.141.1-py3-none-any.whl (131 kB)
+#12 4.835 Downloading uvicorn-0.53.0-py3-none-any.whl (87 kB)
+#12 4.863 Downloading redis-8.1.0-py3-none-any.whl (560 kB)
+#12 4.939    ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 560.6/560.6 kB 8.8 MB/s eta 0:00:00
+#12 4.953 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#12 4.972 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#12 5.001 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#12 5.017 Downloading pydantic-2.13.5-py3-none-any.whl (472 kB)
+#12 5.075 Downloading pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+#12 5.273    ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 2.1/2.1 MB 12.2 MB/s eta 0:00:00
+#12 5.290 Downloading starlette-1.7.0-py3-none-any.whl (78 kB)
+#12 5.318 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#12 5.336 Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+#12 5.350 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#12 5.365 Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+#12 5.398 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#12 5.510 Installing collected packages: typing-extensions, redis, idna, h11, click, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, anyio, starlette, pydantic, fastapi
+#12 9.403 Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 click-8.5.0 fastapi-0.141.1 h11-0.16.0 idna-3.20 pydantic-2.13.5 pydantic-core-2.46.5 redis-8.1.0 starlette-1.7.0 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.53.0
+#12 DONE 9.8s
+
+#13 [runtime 4/5] COPY --from=builder /opt/venv /opt/venv
+#13 DONE 1.4s
+
+#14 [runtime 5/5] COPY --chown=app:app app/ ./app/
+#14 DONE 0.2s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 3.4s done
+#15 exporting manifest sha256:1a399c34b994d255a9a1bea2226290f73df343c966ea306c8305b3aac1e1b4fa 0.0s done
+#15 exporting config sha256:66139cd9e420b931b2de1602fd91880a0c2ae02339d441c117811c938fbd1e1b 0.0s done
+#15 exporting attestation manifest sha256:c463dc12e99717746ca29bead92f4b1b04dd3064b419ee71ff2340ba68122891
+#15 exporting attestation manifest sha256:c463dc12e99717746ca29bead92f4b1b04dd3064b419ee71ff2340ba68122891 0.0s done
+#15 exporting manifest list sha256:a704b0678c88e1c0ef152aab7de4f8d78a5d078959dc1e79cdc3016a7146d2af 0.0s done
+#15 naming to docker.io/aryan2556/studypulse:1.0.0 done
+#15 unpacking to docker.io/aryan2556/studypulse:1.0.0
+#15 unpacking to docker.io/aryan2556/studypulse:1.0.0 2.3s done
+#15 DONE 6.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.1s
+ Image aryan2556/studypulse:1.0.0 Built 
+
+PS> docker image ls aryan2556/studypulse
+IMAGE                        ID             DISK USAGE   CONTENT SIZE   EXTRA
+aryan2556/studypulse:1.0.0   a704b0678c88        225MB         53.9MB        
+
+PS> docker history --format "table {{.CreatedBy}}\t{{.Size}}" aryan2556/studypulse:1.0.0
+CREATED BY                                      SIZE
+CMD ["uvicorn" "app.main:app" "--host" "0.0.ΓÇª   0B
+HEALTHCHECK {Test:[CMD-SHELL python -c "impoΓÇª   0B
+EXPOSE [8000/tcp]                               0B
+USER app                                        0B
+COPY --chown=app:app app/ ./app/ # buildkit     28.7kB
+COPY /opt/venv /opt/venv # buildkit             37MB
+WORKDIR /srv                                    4.1kB
+RUN |1 APP_VERSION=1.0.0 /bin/sh -c groupaddΓÇª   41kB
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERΓÇª   0B
+LABEL org.opencontainers.image.title=studypuΓÇª   0B
+ARG APP_VERSION=1.0.0                           0B
+CMD ["python3"]                                 0B
+RUN /bin/sh -c set -eux;  for src in idle3 pΓÇª   16.4kB
+RUN /bin/sh -c set -eux;   savedAptMark="$(aΓÇª   41.4MB
+ENV PYTHON_SHA256=5c8462af5790baf43a321a1559ΓÇª   0B
+ENV PYTHON_VERSION=3.12.14                      0B
+ENV GPG_KEY=7169605F62C751356D054A26A821E680ΓÇª   0B
+RUN /bin/sh -c set -eux;  apt-get update;  aΓÇª   4.95MB
+ENV LANG=C.UTF-8                                0B
+ENV PATH=/usr/local/bin:/usr/local/sbin:/usrΓÇª   0B
+# debian.sh --arch 'amd64' out/ 'trixie' '@1ΓÇª   87.6MB
+
+---- Start the stack ----
+
+PS> docker compose up -d
+ Image redis:7.4-alpine Pulling 
+ 4eb14bae0e1d Pulling fs layer 0B
+ 83234986c742 Pulling fs layer 0B
+ 16333ee0c00f Pulling fs layer 0B
+ 1522f9c6f453 Pulling fs layer 0B
+ 7eb50503c2b0 Pulling fs layer 0B
+ 4f4fb700ef54 Pulling fs layer 0B
+ 9928009b15c8 Pulling fs layer 0B
+ 4f4fb700ef54 Already exists 0B
+ 7eb50503c2b0 Downloading 198.6kB
+ 4eb14bae0e1d Download complete 0B
+ 7eb50503c2b0 Download complete 0B
+ 83234986c742 Download complete 0B
+ 9928009b15c8 Downloading 100B
+ 16333ee0c00f Downloading 1.049MB
+ 16333ee0c00f Downloading 1.049MB
+ 9928009b15c8 Download complete 0B
+ 16333ee0c00f Downloading 2.097MB
+ 1522f9c6f453 Downloading 1.049MB
+ 16333ee0c00f Downloading 2.097MB
+ 1522f9c6f453 Downloading 1.049MB
+ 1522f9c6f453 Downloading 1.049MB
+ 16333ee0c00f Downloading 3.146MB
+ 16333ee0c00f Download complete 0B
+ 1522f9c6f453 Downloading 2.097MB
+ 16333ee0c00f Extracting 1B
+ 1522f9c6f453 Downloading 3.146MB
+ 16333ee0c00f Extracting 1B
+ 1522f9c6f453 Downloading 4.194MB
+ 16333ee0c00f Extracting 1B
+ 1522f9c6f453 Downloading 5.243MB
+ 54779914f171 Download complete 0B
+ 16333ee0c00f Extracting 1B
+ 1522f9c6f453 Downloading 5.243MB
+ 16333ee0c00f Extracting 1B
+ 1522f9c6f453 Downloading 6.291MB
+ 16333ee0c00f Extracting 1B
+ 3beebc06c4ca Download complete 0B
+ 1522f9c6f453 Downloading 7.34MB
+ 16333ee0c00f Extracting 1B
+ 1522f9c6f453 Downloading 8.389MB
+ 16333ee0c00f Pull complete 0B
+ 1522f9c6f453 Downloading 9.437MB
+ 7eb50503c2b0 Extracting 1B
+ 83234986c742 Pull complete 0B
+ 1522f9c6f453 Downloading 10.49MB
+ 7eb50503c2b0 Extracting 1B
+ 1522f9c6f453 Downloading 11.53MB
+ 7eb50503c2b0 Extracting 1B
+ 1522f9c6f453 Download complete 0B
+ 7eb50503c2b0 Extracting 1B
+ 7eb50503c2b0 Pull complete 0B
+ 1522f9c6f453 Extracting 1B
+ 1522f9c6f453 Extracting 1B
+ 1522f9c6f453 Extracting 1B
+ 1522f9c6f453 Extracting 1B
+ 1522f9c6f453 Extracting 1B
+ 9928009b15c8 Pull complete 0B
+ 1522f9c6f453 Pull complete 0B
+ 4f4fb700ef54 Pull complete 0B
+ 4eb14bae0e1d Extracting 1B
+ 4eb14bae0e1d Pull complete 0B
+ Image redis:7.4-alpine Pulled 
+ Network studypulse_backend Creating 
+ Volume studypulse_redis-data Creating 
+ Network studypulse_frontend Creating 
+ Volume studypulse_redis-data Creating 
+ Network studypulse_backend Creating 
+ Network studypulse_frontend Creating 
+ Volume studypulse_redis-data Created 
+ Volume studypulse_redis-data Created 
+ Network studypulse_backend Created 
+ Network studypulse_backend Created 
+ Container studypulse-redis Creating 
+ Network studypulse_frontend Created 
+ Network studypulse_frontend Created 
+ Container studypulse-redis Created 
+ Container studypulse-web Creating 
+ Container studypulse-web Created 
+ Container studypulse-redis Starting 
+ Container studypulse-redis Started 
+ Container studypulse-redis Waiting 
+ Container studypulse-redis Healthy 
+ Container studypulse-web Starting 
+ Container studypulse-web Started 
+
+PS> docker compose ps
+NAME               IMAGE                        COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+studypulse-redis   redis:7.4-alpine             "docker-entrypoint.sΓÇª"   redis     29 seconds ago   Up 27 seconds (healthy)   6379/tcp
+studypulse-web     aryan2556/studypulse:1.0.0   "uvicorn app.main:apΓÇª"   web       28 seconds ago   Up 16 seconds (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+
+---- Networking evidence ----
+
+PS> docker network ls --filter "name=studypulse"
+NETWORK ID     NAME                  DRIVER    SCOPE
+462a01d38d44   studypulse_backend    bridge    local
+89e9f2b7d8b1   studypulse_frontend   bridge    local
+
+PS> docker network inspect studypulse_backend --format "backend internal={{.Internal}}  containers={{range .Containers}}{{.Name}} {{end}}"
+backend internal=true  containers=studypulse-web studypulse-redis 
+
+PS> docker network inspect studypulse_frontend --format "frontend internal={{.Internal}}  containers={{range .Containers}}{{.Name}} {{end}}"
+frontend internal=false  containers=studypulse-web 
+
+PS> docker port studypulse-web
+8000/tcp -> 0.0.0.0:8000
+8000/tcp -> [::]:8000
+
+PS> docker exec studypulse-web id
+uid=10001(app) gid=10001(app) groups=10001(app)
+
+PS> docker exec studypulse-web env | Select-String -Pattern "^(APP_|REDIS_|LOG_)"
+LOG_LEVEL=info
+REDIS_HOST=redis
+REDIS_PORT=6379
+APP_TITLE=StudyPulse
+APP_ENV=production
+APP_VERSION=1.0.0
+
+PS> docker inspect studypulse-web --format "Health={{.State.Health.Status}}"
+Health=healthy
+
+---- Exercise the API ----
+
+PS> Invoke-RestMethod http://localhost:8000/health | ConvertTo-Json -Compress
+{"status":"ok","backend":"redis"}
+
+PS> Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/sessions -ContentType 'application/json' -Body '{"unit_code":"SWE40006","minutes":90,"note":"Task 4 Dockerfiles"}' | ConvertTo-Json -Compress
+{"unit_code":"SWE40006","minutes":90,"note":"Task 4 Dockerfiles","logged_at":"2026-09-23T12:30:12+00:00"}
+
+PS> Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/sessions -ContentType 'application/json' -Body '{"unit_code":"COS40005","minutes":45,"note":"MailGuard testing"}' | ConvertTo-Json -Compress
+{"unit_code":"COS40005","minutes":45,"note":"MailGuard testing","logged_at":"2026-09-23T12:30:12+00:00"}
+
+PS> Invoke-RestMethod http://localhost:8000/api/stats | ConvertTo-Json -Compress
+{"total_sessions":2,"total_minutes":135,"minutes_per_unit":{"SWE40006":90,"COS40005":45}}
+
+PS> Invoke-RestMethod http://localhost:8000/api/info | ConvertTo-Json -Compress
+{"app":"StudyPulse","environment":"production","version":"1.0.0","container_hostname":"0de6f11a30f7","storage_backend":"redis","started_at":"2026-09-23T12:29:56+00:00"}
+
+---- Persistence check: recreate the containers, data should still be there ----
+
+PS> docker compose down
+ Container studypulse-web Stopping 
+ Container studypulse-web Stopped 
+ Container studypulse-web Removing 
+ Container studypulse-web Removed 
+ Container studypulse-redis Stopping 
+ Container studypulse-redis Stopped 
+ Container studypulse-redis Removing 
+ Container studypulse-redis Removed 
+ Network studypulse_frontend Removing 
+ Network studypulse_backend Removing 
+ Network studypulse_frontend Removed 
+ Network studypulse_backend Removed 
+
+PS> docker compose up -d
+ Network studypulse_backend Creating 
+ Network studypulse_backend Creating 
+ Network studypulse_frontend Creating 
+ Network studypulse_frontend Creating 
+ Network studypulse_frontend Created 
+ Network studypulse_frontend Created 
+ Network studypulse_backend Created 
+ Network studypulse_backend Created 
+ Container studypulse-redis Creating 
+ Container studypulse-redis Created 
+ Container studypulse-web Creating 
+ Container studypulse-web Created 
+ Container studypulse-redis Starting 
+ Container studypulse-redis Started 
+ Container studypulse-redis Waiting 
+ Container studypulse-redis Healthy 
+ Container studypulse-web Starting 
+ Container studypulse-web Started 
+
+PS> Invoke-RestMethod http://localhost:8000/api/stats | ConvertTo-Json -Compress
+{"total_sessions":2,"total_minutes":135,"minutes_per_unit":{"SWE40006":90,"COS40005":45}}
+
+PS> docker volume ls --filter "name=studypulse"
+DRIVER    VOLUME NAME
+local     studypulse_redis-data
+
+PS> docker compose logs --tail 15 web
+studypulse-web  | 2026-09-23 12:30:29,476 INFO studypulse.store: Using Redis store at redis:6379
+studypulse-web  | INFO:     Started server process [1]
+studypulse-web  | INFO:     Waiting for application startup.
+studypulse-web  | INFO:     Application startup complete.
+studypulse-web  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+studypulse-web  | INFO:     127.0.0.1:38962 - "GET /health HTTP/1.1" 200 OK
+studypulse-web  | INFO:     172.18.0.1:57380 - "GET /api/stats HTTP/1.1" 200 OK
+
+---- Push to Docker Hub ----
+
+PS> docker compose push web
+ aryan2556/studypulse:1.0.0 Pushing 
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 6b37362b3da7  
+ 8738325f24ff  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 44136fa355b3  
+ 3764a9a7d1e8  
+ 6b37362b3da7  
+ b0dc7f87bef1  
+ 8738325f24ff  
+ 8738325f24ff  
+ 44136fa355b3  
+ 06ad939ed42b  
+ 6b37362b3da7  
+ b0dc7f87bef1  
+ 8738325f24ff  
+ 06ad939ed42b  
+ 6b37362b3da7  
+ b0dc7f87bef1  
+ b0dc7f87bef1  
+ 8738325f24ff  
+ 706499660f8b  
+ 06ad939ed42b  
+ 6b37362b3da7  
+ 8738325f24ff  1.593kB/1.593kB 
+ 706499660f8b  
+ 06ad939ed42b  
+ b0dc7f87bef1  
+ 8738325f24ff  1.593kB/1.593kB 
+ 706499660f8b  
+ 06ad939ed42b  
+ b0dc7f87bef1  
+ b0dc7f87bef1  
+ 8738325f24ff  1.593kB/1.593kB 
+ 706499660f8b  
+ 06ad939ed42b  
+ 4f4fb700ef54  
+ 8738325f24ff  1.593kB/1.593kB 
+ 706499660f8b  
+ 06ad939ed42b  
+ 4f4fb700ef54  
+ 8738325f24ff  1.593kB/1.593kB 
+ 706499660f8b  
+ 06ad939ed42b  
+ 4f4fb700ef54  
+ 706499660f8b  
+ 06ad939ed42b  
+ 4f4fb700ef54  
+ d2627a149bb7  
+ 8738325f24ff  1.593kB/1.593kB 
+ 1aac00563774  
+ 4f4fb700ef54  
+ d2627a149bb7  
+ 8738325f24ff  1.593kB/1.593kB 
+ 706499660f8b  1.105kB/1.105kB 
+ 8738325f24ff  1.593kB/1.593kB 
+ 706499660f8b  1.105kB/1.105kB 
+ 1aac00563774  
+ 4f4fb700ef54  
+ d2627a149bb7  
+ 706499660f8b  1.105kB/1.105kB 
+ 1aac00563774  
+ 4f4fb700ef54  
+ d2627a149bb7  
+ 8738325f24ff  1.593kB/1.593kB 
+ 1aac00563774  
+ 4f4fb700ef54  
+ d2627a149bb7  
+ 8738325f24ff  
+ 706499660f8b  1.105kB/1.105kB 
+ 4f4fb700ef54  
+ d2627a149bb7  
+ 706499660f8b  1.105kB/1.105kB 
+ 1aac00563774  
+ 706499660f8b  1.105kB/1.105kB 
+ 1aac00563774  
+ 4f4fb700ef54  
+ d2627a149bb7  
+ 706499660f8b  1.105kB/1.105kB 
+ 1aac00563774  4.361kB/4.361kB 
+ 4f4fb700ef54  
+ d2627a149bb7       0B 
+ 1aac00563774  4.361kB/4.361kB 
+ d2627a149bb7       0B 
+ 706499660f8b  1.105kB/1.105kB 
+ 706499660f8b  1.105kB/1.105kB 
+ 1aac00563774  4.361kB/4.361kB 
+ d2627a149bb7  1.049MB 
+ 706499660f8b  
+ 1aac00563774  4.361kB/4.361kB 
+ d2627a149bb7  1.049MB 
+ 1aac00563774  4.361kB/4.361kB 
+ d2627a149bb7  1.049MB 
+ d2627a149bb7  1.049MB 
+ 1aac00563774  4.361kB/4.361kB 
+ 1aac00563774  4.361kB/4.361kB 
+ d2627a149bb7  1.049MB 
+ 1aac00563774  4.361kB/4.361kB 
+ d2627a149bb7  1.049MB 
+ 1aac00563774  4.361kB/4.361kB 
+ d2627a149bb7  1.049MB 
+ d2627a149bb7  2.097MB 
+ 1aac00563774  
+ d2627a149bb7  2.097MB 
+ d2627a149bb7  2.097MB 
+ d2627a149bb7  2.097MB 
+ d2627a149bb7  2.097MB 
+ d2627a149bb7  2.097MB 
+ d2627a149bb7  3.146MB 
+ d2627a149bb7  3.146MB 
+ d2627a149bb7  3.146MB 
+ d2627a149bb7  5.243MB 
+ d2627a149bb7   7.34MB 
+ d2627a149bb7   7.34MB 
+ d2627a149bb7  8.389MB 
+ d2627a149bb7  9.437MB 
+ d2627a149bb7  9.437MB 
+ d2627a149bb7  10.49MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  10.65MB/10.65MB 
+ d2627a149bb7  
+ aryan2556/studypulse:1.0.0 Pushed 

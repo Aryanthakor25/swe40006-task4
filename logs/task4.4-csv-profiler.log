@@ -1,0 +1,343 @@
+﻿==================================================================
+ SWE40006 Deployment Task 4: task4.4-csv-profiler
+ Student : Aryan Thakor (105061154)
+ Host    : DESKTOP-5KRJ5RA
+ Date    : 2026-09-23 23:23:57 +10:00
+==================================================================
+
+---- Build the image ----
+
+PS> docker build --progress=plain --build-arg APP_VERSION=1.0.0 -t aryan2556/csvprofiler:1.0.0 .
+#0 building with "desktop-linux" instance using docker driver
+System.Management.Automation.RemoteException
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.64kB 0.1s done
+#1 DONE 0.2s
+System.Management.Automation.RemoteException
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 ...
+System.Management.Automation.RemoteException
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+System.Management.Automation.RemoteException
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 2.6s
+System.Management.Automation.RemoteException
+#4 [internal] load .dockerignore
+#4 transferring context: 147B 0.0s done
+#4 DONE 0.1s
+System.Management.Automation.RemoteException
+#5 [internal] load build context
+#5 transferring context: 14.09kB 0.0s done
+#5 DONE 0.1s
+System.Management.Automation.RemoteException
+#6 [1/4] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#6 resolve docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9 0.1s done
+#6 CACHED
+System.Management.Automation.RemoteException
+#7 [2/4] RUN groupadd --system --gid 10001 profiler  && useradd --system --uid 10001 --gid profiler --no-create-home --shell /usr/sbin/nologin profiler  && mkdir -p /data/input /data/output /var/lib/csvprofiler  && chown -R profiler:profiler /data /var/lib/csvprofiler
+#7 1.093 useradd warning: profiler's uid 10001 is greater than SYS_UID_MAX 999
+#7 DONE 1.2s
+System.Management.Automation.RemoteException
+#8 [3/4] WORKDIR /opt/csvprofiler
+#8 DONE 0.1s
+System.Management.Automation.RemoteException
+#9 [4/4] COPY --chown=profiler:profiler csvprofiler/ ./csvprofiler/
+#9 DONE 0.2s
+System.Management.Automation.RemoteException
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 0.4s done
+#10 exporting manifest sha256:62e719331cc138f3c1e531c07ee5d4f085b46bd361aeffa7873d368876092177 0.0s done
+#10 exporting config sha256:920b33652eef7e1bad051a29125590d5923332db2b44f40c413426a55002da7d 0.1s done
+#10 exporting attestation manifest sha256:1e6c885c7e4ddcf2d4b6c0da3a210974e196449e1623500c60d661221297be45 0.1s done
+#10 exporting manifest list sha256:9607d8b22e6fdbe00af705303a7e67388500c3e8d6c0ecc1f496c8806ad80580
+#10 exporting manifest list sha256:9607d8b22e6fdbe00af705303a7e67388500c3e8d6c0ecc1f496c8806ad80580 0.1s done
+#10 naming to docker.io/aryan2556/csvprofiler:1.0.0 done
+#10 unpacking to docker.io/aryan2556/csvprofiler:1.0.0
+#10 unpacking to docker.io/aryan2556/csvprofiler:1.0.0 1.8s done
+#10 DONE 2.7s
+System.Management.Automation.RemoteException
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/eky6nk6dtzkgoa3w8vsrzqn9p
+
+PS> docker image ls aryan2556/csvprofiler
+IMAGE                         ID             DISK USAGE   CONTENT SIZE   EXTRA
+aryan2556/csvprofiler:1.0.0   9607d8b22e6f        177MB         43.3MB        
+
+PS> docker image inspect aryan2556/csvprofiler:1.0.0 --format "User={{.Config.User}}  Entrypoint={{json .Config.Entrypoint}}  Cmd={{json .Config.Cmd}}  Volumes={{json .Config.Volumes}}"
+User=profiler  Entrypoint=["python","-m","csvprofiler"]  Cmd=["--help"]  Volumes={"/data/output":{},"/var/lib/csvprofiler":{}}
+
+---- Default command (--help) ----
+
+PS> docker run --rm aryan2556/csvprofiler:1.0.0
+usage: csvprofiler [-h] [--version] {profile,profile-all,history,watch} ...
+
+Profile CSV files and keep a run history.
+
+positional arguments:
+  {profile,profile-all,history,watch}
+    profile             profile a single CSV file
+    profile-all         profile every CSV in the input folder
+    history             show previous runs
+    watch               profile new files as they arrive
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+
+PS> docker run --rm aryan2556/csvprofiler:1.0.0 --version
+csvprofiler 1.0.0
+
+---- Named volume for persistent run history ----
+
+PS> docker volume create csvprofiler-history
+csvprofiler-history
+
+PS> docker volume inspect csvprofiler-history
+[
+    {
+        "CreatedAt": "2026-09-23T13:24:12Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/csvprofiler-history/_data",
+        "Name": "csvprofiler-history",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+
+---- Batch run lifecycle: create, start, exit, remove ----
+
+PS> docker create --name csvprofiler-run1 --network none -v "C:\Users\ARYAN\Documents\swe40006-task4\task4.4-csv-profiler\data\input:/data/input:ro" -v "C:\Users\ARYAN\Documents\swe40006-task4\task4.4-csv-profiler\data\output:/data/output" -v csvprofiler-history:/var/lib/csvprofiler aryan2556/csvprofiler:1.0.0 profile-all
+7efb1c3381da444b67c07b292a4bd2c13f95797b451a40f863f4a5fe8ec17b5f
+
+PS> docker ps -a --filter "name=csvprofiler-run1" --format "table {{.Names}}\t{{.Status}}"
+NAMES              STATUS
+csvprofiler-run1   Created
+
+PS> docker start --attach csvprofiler-run1
+2026-09-23T13:24:14+0000 INFO    csvprofiler: Found 2 CSV file(s) in /data/input
+2026-09-23T13:24:14+0000 INFO    csvprofiler: Profiled melbourne_weather.csv: 30 rows x 6 cols, completeness 97.78% (44 ms), wrote melbourne_weather.profile.json, melbourne_weather.profile.md
+2026-09-23T13:24:14+0000 INFO    csvprofiler: Profiled store_stock_counts.csv: 120 rows x 7 cols, completeness 99.40% (26 ms), wrote store_stock_counts.profile.json, store_stock_counts.profile.md
+2026-09-23T13:24:14+0000 INFO    csvprofiler: Done: 2 succeeded, 0 failed
+
+PS> docker ps -a --filter "name=csvprofiler-run1" --format "table {{.Names}}\t{{.Status}}"
+NAMES              STATUS
+csvprofiler-run1   Exited (0) Less than a second ago
+
+PS> docker inspect csvprofiler-run1 --format "ExitCode={{.State.ExitCode}}  StartedAt={{.State.StartedAt}}  FinishedAt={{.State.FinishedAt}}"
+ExitCode=0  StartedAt=2026-09-23T13:24:13.328219134Z  FinishedAt=2026-09-23T13:24:14.400696822Z
+
+PS> docker logs --timestamps csvprofiler-run1
+2026-09-23T13:24:14.241600281Z 2026-09-23T13:24:14+0000 INFO    csvprofiler: Found 2 CSV file(s) in /data/input
+2026-09-23T13:24:14.321738885Z 2026-09-23T13:24:14+0000 INFO    csvprofiler: Profiled melbourne_weather.csv: 30 rows x 6 cols, completeness 97.78% (44 ms), wrote melbourne_weather.profile.json, melbourne_weather.profile.md
+2026-09-23T13:24:14.366668545Z 2026-09-23T13:24:14+0000 INFO    csvprofiler: Profiled store_stock_counts.csv: 120 rows x 7 cols, completeness 99.40% (26 ms), wrote store_stock_counts.profile.json, store_stock_counts.profile.md
+2026-09-23T13:24:14.366720060Z 2026-09-23T13:24:14+0000 INFO    csvprofiler: Done: 2 succeeded, 0 failed
+
+PS> docker rm csvprofiler-run1
+csvprofiler-run1
+
+PS> Get-ChildItem "C:\Users\ARYAN\Documents\swe40006-task4\task4.4-csv-profiler\data\output" -Filter *.profile.* | ForEach-Object { '{0,-34} {1,6} bytes' -f $_.Name, $_.Length }
+melbourne_weather.profile.json       1985 bytes
+melbourne_weather.profile.md          725 bytes
+store_stock_counts.profile.json      2276 bytes
+store_stock_counts.profile.md         809 bytes
+
+---- Error handling: missing file should give exit code 3 ----
+
+PS> docker run --rm --network none -v "C:\Users\ARYAN\Documents\swe40006-task4\task4.4-csv-profiler\data\input:/data/input:ro" -v "C:\Users\ARYAN\Documents\swe40006-task4\task4.4-csv-profiler\data\output:/data/output" -v csvprofiler-history:/var/lib/csvprofiler aryan2556/csvprofiler:1.0.0 profile does_not_exist.csv
+2026-09-23T13:24:16+0000 ERROR   csvprofiler: Input file not found: /data/input/does_not_exist.csv
+[exit code 3]
+
+---- History from a new container (same volume) ----
+
+PS> docker run --rm -v csvprofiler-history:/var/lib/csvprofiler aryan2556/csvprofiler:1.0.0 history
+  ID  RUN AT (UTC)               CONTAINER     FILE                            ROWS  COLS     MS  STATUS
+--------------------------------------------------------------------------------------------------------
+   2  2026-09-23T13:24:14+00:00  7efb1c3381da  store_stock_counts.csv           120     7     26  ok
+   1  2026-09-23T13:24:14+00:00  7efb1c3381da  melbourne_weather.csv             30     6     44  ok
+
+---- Watcher with docker compose, then stop it (SIGTERM) ----
+
+PS> docker compose up -d watcher
+ Container csvprofiler-watcher Creating 
+ Container csvprofiler-watcher Created 
+ Container csvprofiler-watcher Starting 
+ Container csvprofiler-watcher Started 
+
+PS> docker compose ps watcher
+NAME                  IMAGE                         COMMAND                  SERVICE   CREATED         STATUS         PORTS
+csvprofiler-watcher   aryan2556/csvprofiler:1.0.0   "python -m csvprofilΓÇª"   watcher   5 seconds ago   Up 4 seconds   
+
+PS> Copy-Item samples/unit_results.csv data/input/ -PassThru | ForEach-Object Name
+unit_results.csv
+
+PS> docker compose stop watcher
+ Container csvprofiler-watcher Stopping 
+ Container csvprofiler-watcher Stopped 
+
+PS> docker compose logs --timestamps watcher
+csvprofiler-watcher  | 2026-09-23T13:24:20.743488663Z 2026-09-23T13:24:20+0000 INFO    csvprofiler: Watching /data/input every 5.0s (container eaebdbe16b19)
+csvprofiler-watcher  | 2026-09-23T13:24:25.952438524Z 2026-09-23T13:24:25+0000 INFO    csvprofiler: Profiled unit_results.csv: 24 rows x 4 cols, completeness 94.79% (85 ms), wrote unit_results.profile.json, unit_results.profile.md
+csvprofiler-watcher  | 2026-09-23T13:24:33.122122778Z 2026-09-23T13:24:33+0000 INFO    csvprofiler: Received SIGTERM, finishing current work and shutting down
+csvprofiler-watcher  | 2026-09-23T13:24:33.200340040Z 2026-09-23T13:24:33+0000 INFO    csvprofiler: Watcher stopped cleanly
+
+PS> docker inspect csvprofiler-watcher --format "ExitCode={{.State.ExitCode}}  Status={{.State.Status}}"
+ExitCode=0  Status=exited
+
+PS> docker compose run --rm profiler history
+ Container csvprofiler-profiler-run-18fe8f7963cf Creating 
+ Container csvprofiler-profiler-run-18fe8f7963cf Created 
+  ID  RUN AT (UTC)               CONTAINER     FILE                            ROWS  COLS     MS  STATUS
+--------------------------------------------------------------------------------------------------------
+   3  2026-09-23T13:24:25+00:00  eaebdbe16b19  unit_results.csv                  24     4     85  ok
+   2  2026-09-23T13:24:14+00:00  7efb1c3381da  store_stock_counts.csv           120     7     26  ok
+   1  2026-09-23T13:24:14+00:00  7efb1c3381da  melbourne_weather.csv             30     6     44  ok
+
+PS> docker compose rm -f watcher
+Going to remove csvprofiler-watcher
+ Container csvprofiler-watcher Removing 
+ Container csvprofiler-watcher Removed 
+
+---- Push to Docker Hub ----
+
+PS> docker push aryan2556/csvprofiler:1.0.0
+The push refers to repository [docker.io/aryan2556/csvprofiler]
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+44136fa355b3: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Waiting
+b7713682a357: Waiting
+3764a9a7d1e8: Waiting
+6b37362b3da7: Mounted from aryan2556/swe40006-flask-app
+b0dc7f87bef1: Waiting
+b7713682a357: Waiting
+44136fa355b3: Waiting
+b0dc7f87bef1: Waiting
+a6f458ac612b: Waiting
+b7713682a357: Waiting
+44136fa355b3: Mounted from aryan2556/swe40006-flask-app
+3764a9a7d1e8: Mounted from aryan2556/swe40006-flask-app
+06ad939ed42b: Waiting
+06ad939ed42b: Waiting
+b0dc7f87bef1: Waiting
+a6f458ac612b: Waiting
+b7713682a357: Waiting
+06ad939ed42b: Waiting
+b0dc7f87bef1: Waiting
+a6f458ac612b: Waiting
+b0dc7f87bef1: Waiting
+a6f458ac612b: Waiting
+06ad939ed42b: Waiting
+06ad939ed42b: Waiting
+b0dc7f87bef1: Waiting
+a6f458ac612b: Waiting
+563c8c828e82: Waiting
+06ad939ed42b: Waiting
+b0dc7f87bef1: Mounted from aryan2556/swe40006-flask-app
+a6f458ac612b: Waiting
+563c8c828e82: Waiting
+3240e2b3e09f: Waiting
+06ad939ed42b: Mounted from aryan2556/swe40006-flask-app
+563c8c828e82: Waiting
+3240e2b3e09f: Waiting
+563c8c828e82: Waiting
+3240e2b3e09f: Waiting
+563c8c828e82: Waiting
+3240e2b3e09f: Waiting
+563c8c828e82: Waiting
+3240e2b3e09f: Waiting
+563c8c828e82: Waiting
+3240e2b3e09f: Waiting
+b7713682a357: Pushed
+a6f458ac612b: Pushed
+563c8c828e82: Pushed
+3240e2b3e09f: Pushed
+1.0.0: digest: sha256:9607d8b22e6fdbe00af705303a7e67388500c3e8d6c0ecc1f496c8806ad80580 size: 856

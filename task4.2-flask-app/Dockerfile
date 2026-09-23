@@ -1,5 +1,4 @@
 # SWE40006 Task 4.2: Flask web app image
-
 FROM python:3.12-slim
 
 # Don't write .pyc files and don't buffer stdout, so `docker logs` shows output straight away
