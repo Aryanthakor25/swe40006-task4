@@ -7,9 +7,9 @@ Target level: 4.4 High Distinction (4.1 to 4.3 done as prerequisites)
 | Level | Folder | What it is | Image |
 |---|---|---|---|
 | 4.1 Pass | `task4.1-hello-world/` | Docker Desktop (WSL 2), Docker Hub account, `hello-world` check | `hello-world` |
-| 4.2 Credit | `task4.2-flask-app/` | Basic Flask app on port 5000, pushed to Docker Hub and pulled/run on EC2 | `<user>/swe40006-flask-app:1.0` |
-| 4.3 Distinction | `task4.3-studypulse/` | StudyPulse, a FastAPI study tracker with Redis. Multi-stage non-root image, health check, env var config, two compose networks (backend is internal), named volume, public on EC2 over HTTP and HTTPS (Caddy) | `<user>/studypulse:1.0.0` |
-| 4.4 High Distinction | `task4.4-csv-profiler/` | csvprofiler, a CLI that profiles CSV files. Bind mounts for input/output, named volume for the SQLite run history, exit codes, watcher that shuts down cleanly on SIGTERM | `<user>/csvprofiler:1.0.0` |
+| 4.2 Credit | `task4.2-flask-app/` | Basic Flask app on port 5000, pushed to Docker Hub and pulled/run on EC2 | `aryan2556/swe40006-flask-app:1.0` |
+| 4.3 Distinction | `task4.3-studypulse/` | StudyPulse, a FastAPI study tracker with Redis. Multi-stage non-root image, health check, env var config, two compose networks (backend is internal), named volume, public on EC2 over HTTP and HTTPS (Caddy) | `aryan2556/studypulse:1.0.0` |
+| 4.4 High Distinction | `task4.4-csv-profiler/` | csvprofiler, a CLI that profiles CSV files. Bind mounts for input/output, named volume for the SQLite run history, exit codes, watcher that shuts down cleanly on SIGTERM | `aryan2556/csvprofiler:1.0.0` |
 
 ## Folder layout
 
